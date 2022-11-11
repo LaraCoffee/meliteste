@@ -162,11 +162,11 @@ void listagem(){
     printf("Matricula Nome Media\n");
     linha();
     rewind(paluno);
-    fread(&aluno_aux,sizeof(TAluno),1,paluno);
     while (feof(paluno)==0){
+        fread(&aluno_aux,sizeof(TAluno),1,paluno);
         if (aluno_aux.mat != 0){
             printf("%9d %-20s %5.1f\n", aluno_aux.mat,aluno_aux.nome,aluno_aux.med);
-            fread(&aluno_aux,sizeof(TAluno), 1, paluno);
+            //fread(&aluno_aux,sizeof(TAluno), 1, paluno);
         }
     }    
     linha();
