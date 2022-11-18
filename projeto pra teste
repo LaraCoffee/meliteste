@@ -10,7 +10,8 @@ int sexo;
 int cpf;
 int idade;
 int pacote;
-int pontos; 
+int pontos;
+float mensalidade; 
  } dados_cliente;
 
 dados_cliente dadoscliente, cliente_nulo;
@@ -25,21 +26,57 @@ void mostre();
 void abre_arquivo(){
 	cliente = fopen("cliente.dat", "a+b");
 }
+float mens(int x, int y){
+    float pt=0;
+    float p = 220.00, o = 170.00, s=120.00;
+    float p1 =60.00, p2 =40.00, p3 =25.00;
+    if (x==1){
+        pt = p + (p1 * y);
+
+        return pt;
+    }else if (x==2){
+        pt = o + (p2 * y);
+
+        return pt;
+    }else if (x==3){
+        pt = s + (p3 * y);
+
+        return pt;
+    }
+    
+}
+
+
 void cadastro(){
  do{    
-        printf("\nDigite o seu primeiro nome: ");
+        printf("\nDigite o seu nome: ");
 			fflush(stdin);           
 		    gets(dadoscliente.nome);
          printf("\nDigite o seu cpf: ");
             scanf("%i", &dadoscliente.cpf);
          printf("\nDigite o seu sexo[1= feminino][2 = masculino]: ");
             scanf("%i", &dadoscliente.sexo);
+            if(dadoscliente.sexo > 2){
+            	while(dadoscliente.sexo>2){
+            		printf("Sexo nao existente");
+            		printf("\nDigite o seu sexo[1= feminino][2 = masculino]: ");
+            		scanf("%i", &dadoscliente.sexo);
+				}
+			}
          printf("\nDigite a sua idade: ");
             scanf("%i", &dadoscliente.idade);
          printf("\nDigite qual pacote voce escolheu(1-Premium/2-Ouro/3-Standard): ");
             scanf("%i", &dadoscliente.pacote);
+        if(dadoscliente.pacote >3){
+                while(dadoscliente.pacote>3){
+                	printf("Voce digitou um pacote inexistente");
+                    printf("\nDigite qual pacote voce escolheu(1-Premium/2-Ouro/3-Standard): ");
+            		scanf("%i", &dadoscliente.pacote);
+					 }
+			}    
          printf("\nDigite a quantidade de pontos que voce ira querer na sua casa: ");
             scanf("%i", &dadoscliente.pontos);
+            dadoscliente.mensalidade = mens(dadoscliente.pacote, dadoscliente.pontos);
          printf("\nDigite 1 para continuar ou outro valor para sair: ");
            scanf("%i", &op);
         fseek(cliente,0,SEEK_SET); 
@@ -51,11 +88,11 @@ void cadastro(){
 
 void lista(){
     	rewind (cliente);
-       while(feof(cliente)==0){
+        while(feof(cliente)==0){
        		fread(&dadoscliente,sizeof(dados_cliente),1,cliente);
        		if(dadoscliente.cpf != 0){   
             printf("\n");
-            printf("|Nome:%s |CPF: %i|Sexo: %i|Idade: %i|Pacote:%i|Pontos:%i|", dadoscliente.nome,dadoscliente.cpf, dadoscliente.sexo, dadoscliente.idade,dadoscliente.pacote,dadoscliente.pontos);
+            printf("|Nome:%s |CPF: %i|Sexo: %i|Idade: %i|Pacote:%i|Pontos:%i|Mensalidade: R$%.2f ", dadoscliente.nome,dadoscliente.cpf, dadoscliente.sexo, dadoscliente.idade,dadoscliente.pacote,dadoscliente.pontos, dadoscliente.mensalidade);
             //fread(&dadoscliente,sizeof(dados_cliente),1,cliente);
         
 			}
