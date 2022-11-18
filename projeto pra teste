@@ -31,19 +31,66 @@ float mens(int x, int y){
     float p = 220.00, o = 170.00, s=120.00;
     float p1 =60.00, p2 =40.00, p3 =25.00;
     if (x==1){
-        pt = p + (p1 * y);
-
+        
+		if(y>2){
+			pt = p + ((p1 * y)*0.85);
+		}else{
+		pt = p + (p1 * y);
+		}
         return pt;
     }else if (x==2){
-        pt = o + (p2 * y);
-
+        if(y>2){
+			pt = o + ((p2 * y)*0.85);
+		}else{
+		pt = o + (p2 * y);
+		}
         return pt;
     }else if (x==3){
-        pt = s + (p3 * y);
+        if(y>2){
+			pt = s + ((p3 * y)*0.85);
+		}else{
+		pt = s + (p3 * y);
+		}
 
         return pt;
     }
     
+}
+
+
+void pacote1(){
+rewind(cliente);
+while(feof(cliente)==0){
+    fread(&dadoscliente,sizeof(dados_cliente),1,cliente);	
+    if(dadoscliente.pacote == 1){
+    	printf("\nCliente com pacote Premiun:\n");
+        printf("|Nome:%s |CPF: %i|Sexo: %i|Idade: %i|Pacote:%i|Pontos:%i|Mensalidade:%.2f| ", dadoscliente.nome,dadoscliente.cpf, dadoscliente.sexo, dadoscliente.idade,dadoscliente.pacote,dadoscliente.pontos, dadoscliente.mensalidade);   
+		fflush(stdin);
+    }
+}
+
+}
+void pacote2(){
+rewind(cliente);
+while(feof(cliente)==0){
+    fread(&dadoscliente,sizeof(dados_cliente),1,cliente);
+    if(dadoscliente.pacote == 2){
+        printf("\nCliente com pacote Ouro:\n|Nome:%s |CPF: %i|Sexo: %i|Idade: %i|Pacote:%i|Pontos:%i|Mensalidade:%.2f| ", dadoscliente.nome,dadoscliente.cpf, dadoscliente.sexo, dadoscliente.idade,dadoscliente.pacote,dadoscliente.pontos, dadoscliente.mensalidade);   
+
+    }
+}
+
+}
+void pacote3(){
+rewind(cliente);
+while(feof(cliente)==0){
+    fread(&dadoscliente,sizeof(dados_cliente),1,cliente);
+    if(dadoscliente.pacote == 3){
+        printf("\nCliente com pacote Standard:\n|Nome:%s |CPF: %i|Sexo: %i|Idade: %i|Pacote:%i|Pontos:%i|Mensalidade:%.2f| ", dadoscliente.nome,dadoscliente.cpf, dadoscliente.sexo, dadoscliente.idade,dadoscliente.pacote,dadoscliente.pontos, dadoscliente.mensalidade);   
+		fflush(stdin);
+    }
+}
+
 }
 
 
@@ -105,7 +152,7 @@ void remover(){
     cliente_nulo.cpf = 0;
     //cliente_nulo.pacote = 0;
     do{ 
-        printf("\n\nRemover aluno\n\n\n");
+        printf("\n\nRemover cliente\n\n\n");
         printf("Digite o CPF: ");
         scanf("%d", &cpf);
         posicao = procura(cpf);
@@ -136,9 +183,10 @@ int procura(int pcpf){
     //fread(&dadoscliente,sizeof(dados_cliente), 1,cliente);
     while (feof(cliente)==0){ 
     	fread(&dadoscliente,sizeof(dados_cliente), 1,cliente);
-        if (dadoscliente.cpf ==pcpf)
+        if (dadoscliente.cpf ==pcpf){
         return p;
-        else{ 
+        
+        }else{ 
             fread(&dadoscliente,sizeof(dados_cliente), 1,cliente);
             p++;
         }
@@ -152,23 +200,37 @@ void mostre(int pos){
     printf("Nome: %-20s \nCPF: %d \n Pacote%d \n", dadoscliente.nome, dadoscliente.cpf, dadoscliente.pacote);
 }
 
-void consultar(){
-    int resp, matcon, posicao;
-    do{ 
-        printf("\n\nConsultar Aluno\n\n\n");
-        printf("Matricula do aluno: ");
-        scanf("%d", &matcon);
-        posicao = procura(matcon);
-        if (posicao == -1){
-        printf("\n\nMatricula nao encontrada!\n\n");
-        }else{
-        mostre(posicao);
-        printf("\n\nDeseja consultar outro (1-sim/0-nao)? ");
-        scanf("%d", &resp);
-        }
-    } while (resp == 1);
-}
 
+
+void alterar(){ 
+    int cpfalt, conf, resp, posicao;
+    do { 
+        printf("\n\nAlterar cadastro\n\n\n");
+        printf("CPF: ");
+        scanf("%d", &cpfalt);
+        posicao = procura(cpfalt);
+        if (posicao == -1){
+            printf("\nCliente nao cadstrado!!\a");
+        }else{
+            mostre(posicao);
+            printf("\n\nAlterar dados do cadastro(1-sim/0-nao)? ");
+            scanf("%d", &conf);
+            if (conf == 1){ 
+                printf("\nNovo cpf: ");
+                scanf("%d", &dadoscliente.cpf);
+                printf("\nCPF alterado com sucesso! \n\n");
+                fseek(cliente,posicao*sizeof(dados_cliente),SEEK_SET);
+                fwrite(&dadoscliente,sizeof(dados_cliente), 1,cliente);
+                mostre(posicao);
+                printf("\nCPF alterado com sucesso!\n");
+            }else{
+                printf("\n\nAlteracao cancelada!\n\n");
+            }
+            printf("\n\nDeseja alterar outro (1-sim/0-nao)? ");
+            scanf("%d", &resp);
+        }
+    }while (resp ==1);
+}
 
 
 
@@ -186,7 +248,7 @@ abre_arquivo();
         printf("\t\t\t|\t 4 - Editar cliente              |\n");
         printf("\t\t\t|\t 5 - Remover cliente             |\n");
         printf("\t\t\t|\t 6 - Listar Clientes Por Pacotes |\n");
-        printf("\t\t\t|\t 0 - sair                        |\n");
+        printf("\t\t\t|\t 7 - sair                        |\n");
         printf ("\t\t\t===================================\n");
         printf ("\n\n");
         printf("\t\t\tPor favor, selecione uma opcao: ");
@@ -202,15 +264,17 @@ abre_arquivo();
            
             break;
         case 4:
-           
+           	alterar();
             break;
         case 5:
            remover();
             break;
         case 6:
-           
+           	pacote1();
+           	pacote2();
+           	pacote3();
             break;
-         case 0:
+         case 7:
          fclose(cliente);
             break;
        
@@ -218,6 +282,6 @@ abre_arquivo();
         printf("Opção invalida");
             break;
         }
- } while (op != 0);
+ } while (op != 7);
  
 }
