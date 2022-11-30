@@ -98,8 +98,13 @@ void media_idade(){  //media da mensalidade idosos
 		}
 		fread(&dadoscliente,sizeof(dados_cliente),1,cliente);
 	}
-	media_velho = valor_idade/c_velho;
-	printf("\nMedia da mensalidade dos clientes com mais de 60 anos: R$ %.2f",media_velho);
+	if(c_velho!=0){
+		media_velho = valor_idade/c_velho;
+		printf("\nMedia da mensalidade dos clientes com mais de 60 anos: R$ %.2f",media_velho);
+	}else{
+		media_velho = 0;
+		printf("\nMedia da mensalidade dos clientes com mais de 60 anos: R$ %.2f",media_velho);
+	}
 	
 }
 
